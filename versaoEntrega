@@ -1,0 +1,336 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h> // comando rand() % 10. e srand()
+#include <time.h>
+
+
+struct personagem {
+    char nome[30];
+    char escolha_classe[20];
+    int classe;
+    int ataque, cons, CA;
+}player;
+
+struct enemy {
+    int ataque;
+    int vida;
+    int CA;
+}inimigo1, inimigo2, inimigo3;
+
+int dificuldade;
+
+void char_creat (){
+    player.classe=0;
+    while(player.classe==0) {
+        printf("%s, a duas escolhas a serem feitas como classe, Barbaro e Ladino.\n"
+               "Para sua escolha, digite:\n 1 para Barbaro.\n 2 para Ladino.\n", player.nome);
+        scanf("%d", &player.classe);
+    }
+    if (player.classe==1){
+        stpcpy(player.escolha_classe,"Barbaro"); //ponteiro para atribuir no struct
+        printf("Parabéns %s, você agora é um %s.", player.nome, player.escolha_classe);
+        printf(" Como Barbaro você possui 10 pontos para atribuir entre: força, vida e armadura\n");
+        printf("Força: \n");
+        scanf("%d", &player.ataque);
+        printf("Vida: \n");
+        scanf("%d", &player.cons);
+        printf("Armadura: \n");
+        scanf("%d", &player.CA);
+        if (player.ataque+player.cons+player.CA > 10) {
+            printf("Você não possui pontos o suficiente para essa distribuição.\n");
+
+            while (player.ataque + player.cons + player.CA > 10) {
+                printf("Tente novamente dentro dos parametros:\n");
+                printf("Força: \n");
+                scanf("%d", &player.ataque);
+                printf("Vida: \n");
+                scanf("%d", &player.cons);
+                printf("Armadura: \n");
+                scanf("%d", &player.CA);
+
+            }
+        }
+    } else {
+        stpcpy(player.escolha_classe,"Ladino");
+        printf("Parabéns %s, você agora é um %s.", player.nome, player.escolha_classe);
+        printf(" Como Ladino você possui 10 pontos para atribuir entre: destreza, vida e reflexo\n");
+        printf("Destreza: \n");
+        scanf("%d", &player.ataque);
+        printf("Vida: \n");
+        scanf("%d", &player.cons);
+        printf("Reflexo: \n");
+        scanf("%d", &player.CA);
+        if (player.ataque+player.cons+player.CA > 10)
+            printf("Você não possui pontos o suficiente para essa distribuição\n");
+
+        while (player.ataque+player.cons+player.CA > 10){
+            printf("Tente novamente dentro dos parametros.\n");
+            printf("Destreza: \n");
+            scanf("%d", &player.ataque);
+            printf("Vida: \n");
+            scanf("%d", &player.cons);
+            printf("Reflexo: \n");
+            scanf("%d", &player.CA);
+
+        }
+    }
+    if (player.classe==1){
+        player.CA= player.CA + 10;
+        player.cons= player.cons + 12;
+    }
+    else {
+        player.CA = player.CA + 13;
+        player.cons = player.cons + 8;
+    }
+}
+
+
+int fight(struct personagem player, struct enemy inimigo) {
+
+    int *vida;
+    int iniciativa_player, iniciativa_enemy;
+    int roll = 0;
+    int aux = 0;
+    int damage = 0;
+    vida = &player.cons;
+    srand(time(NULL));
+
+    iniciativa_player = rand() % 20+1;
+    iniciativa_enemy = rand() % 20+1;
+    printf("A sua iniciativa foi de %d e a do inimigo foi de %d. \n", iniciativa_player, iniciativa_enemy);
+
+    if (iniciativa_player >= iniciativa_enemy) {
+        while (*vida > 0 && inimigo.vida > 0) {
+            roll = (rand() % 20 + 1) + player.ataque;
+            printf("Seu ataque foi: %d\n", roll);
+            if (roll >= inimigo.CA) {
+                printf("Você acertou o seu inimigo\n");
+                aux = (rand() % 4+1) + player.ataque;
+                printf("Desferindo %d de dano nele\n", aux);
+                inimigo.vida = inimigo.vida - aux;
+                printf("Vida do inimigo: %d\n",inimigo.vida);
+                if (inimigo.vida < 0){
+                    break;
+                }
+
+            }
+            roll = (rand() % 20 + 1) + inimigo.ataque;
+            printf("ataque do inimigo: %d\n", roll);
+            if (roll >= player.CA) {
+                printf("Ele te acertou\n");
+                aux = (rand() % 4+1) + inimigo.ataque;
+                printf("Desferindo %d de dano em você\n",aux);
+                *vida = *vida - aux;
+                printf("Sua vida: %d\n",*vida);
+                if (*vida < 0){
+                    break;
+                }
+            }
+
+        }
+    } else {
+        while (*vida > 0 && inimigo.vida > 0) {
+            roll = (rand() % 20 + 1) + inimigo.ataque;
+            printf("ataque do inimigo: %d\n", roll);
+            if (roll >= player.CA) {
+                printf("Ele te acertou\n");
+                aux = (rand() % 4+1) + inimigo.ataque;
+                printf("Desferindo %d de dano em você\n", aux);
+                *vida = *vida - aux;
+                printf("Sua vida: %d\n",*vida);
+                if (*vida < 0){
+                    break;
+                }
+
+            }
+            roll = (rand() % 20 + 1) + player.ataque;
+            printf("Seu ataque foi: %d\n", roll);
+            if (roll >= inimigo.CA) {
+                printf("Você acertou o seu inimigo\n");
+                aux = (rand() % 4+1) + player.ataque;
+                printf("Desferindo %d de dano nele\n",aux);
+                inimigo.vida = inimigo.vida - aux;
+                printf("vida do inimigo: %d\n",inimigo.vida);
+                if (inimigo.vida < 0){
+                    break;
+                }
+            }
+        }
+    }
+    return player.cons;
+}
+
+int main() {
+    
+    int pericia=0;
+    int path_choice=0;
+    int path_choice_escolha=0;
+    srand(time(NULL)); //unica chamada para não repetir números (eu acho_Norhan)
+    
+    printf("Olá aventureiro, digite o nome de seu personagem: \n");
+    scanf(" %[^\n]s",player.nome);
+
+    printf("Escolha a dificuldade do jogo, isso determinará a quantidade de vida de seus inimigos.\n 1 - para facil\n 2 - para médio\n 3 - para dificil\n");
+    scanf("%d",&dificuldade);
+
+    switch(dificuldade){    //o Ca foi colocado para teste.
+        case 1:
+            inimigo1.vida =  10;
+            inimigo1.CA = 8;
+            inimigo2.vida =  10;
+            inimigo3.vida =  13;
+            break;
+        case 2:
+            inimigo1.vida = 13;
+            inimigo1.CA = 10;
+            inimigo2.vida = 13;
+            inimigo3.vida = 18;
+            break;
+        case 3:
+            inimigo1.vida = 18;
+            inimigo1.CA = 13;
+            inimigo2.vida = 18;
+            inimigo3.vida = 25;
+            break;
+        default:
+            printf("não selecionou dificuldade");
+            break;
+    }
+
+    char_creat(player);
+ 
+ if (player.classe !=1){
+ 
+  printf("Agora estamos prontos para começarmos nossa aventura, leia com atenção suas alternativas e escolha sabiamente.\n");
+  sleep(3);
+  printf("Cinco dias atrás você estava sentado a em taverna à beira da estrada após ter recebido uma recompensa pela captura de um fugitivo,\n"
+      "sem mais nenhum plano do que fazer em seguida, foi pego por uma conversa.\n");
+  sleep(3);
+  printf("que a principio não havia le chamado atenção, mas quando a  palavra tesouro foi mencionada, isso voltou sua atenção ao que ocorria\n"
+        "na mesa, sutilmente você ouviu toda a conversa.\n");
+  sleep(3);
+  printf(" Um grande grupo de mercenarios havia sido contratado por um Culto, saquearam cidades e agora estavam a caminho de Waterdeep, a\n" 
+  "norte dali. Antes se reuniriam em um acampamento, agrupariam-se e partiriam para uma viagem maior, todos os mercenarios contratados assim\n"
+  "como membros do culto estavam reunindo o tesouro dos saques neste acampamento.\n");
+  sleep(5);
+  printf(" Você ficou atento, sem chamar atenção dos dois mercenarios que conversavam ali, você obteve informações, agora bastava que você\n"
+  "seguisse-os para que eles te guiassem até o acampamento.\n");
+  sleep(3);
+  printf("Já passando-se cinco dias no rastro dos dois homens, já era possível avistar o acampamento em meio a um platô rochoso. Já é noite,\n"
+  "pessoas vem e vão livremente vagando pelo acampamento, não apenas humanos, mas também alguns kobolds também vagueiam por ali.\n");
+  sleep(2);
+  printf("Observando por alguns minutos você nota...\n");
+  sleep(3);
+
+  pericia = rand() % 20+1;
+      if(pericia < 9){
+      printf("Você nota que há um guarda na entrada do acampamento e seria facil atrair sua atenção, ter um confronto direto para\n" 
+      "liberar sua entrada no acampamento seria a melhor opção agora.\n");
+      sleep(2);
+      player.cons = fight(player, inimigo1);
+      printf("Sua vida restante: %d\n\n",player.cons);
+      }else {
+      printf("Você percebe que muitos dali são mercenarios que são bem distintos uns dos outros, não háveria possibilidade do guarda\n" 
+      "saber se voce é ou não um deles, bastaria que voce entrasse pela porta da frente.\n");
+      sleep(2);
+      printf(" Você segue em frente destemido...\n");
+      sleep(2);
+      printf("Você vai se aproximando do guarda que passa a te encarar conforme se aproxima...\n");
+      sleep(4);
+      printf("Com um aceno de cabeça sua passagem está livre, você pode seguir seu caminho.\n");
+      }
+  sleep(2);
+
+  printf("Seu primeiro confronto foi um sucesso, vamos seguir com sua missão pessoal.\n");
+  sleep(1);
+  printf(" Já dentro do acampamento é possível avistar muitas tendas e barracas, há fogueiras espalhadas, homens se juntão e bebem sob a\n" 
+  "proteção do fogo.\n");
+  sleep(1);
+  printf("Com as informações que teve ouvindo a conversa na taverna, você sabe que todo tesouro está sendo recolhida e colocada dentro da\n" 
+  "caverna no fundo do platô.\n");
+  sleep(2);
+
+  printf("O que você deseja fazer em seguida.\n 1. Ir em direção a caverna.\n 2. Obter mais informações.\n");
+  scanf("%d", &path_choice);
+
+   if(path_choice==1){      
+      printf("Indo em direção a caverna, um guarda para diante de você.\n");
+      sleep(1);
+      printf("O que pensa que está fazendo aqui, todos sabem que não é permitida a entrada de mercenarios na caverna.\n");
+      sleep(2);
+      printf("O que você deseja fazer a seguir:\n 1.Confrontar o guarda.\n 2.Dar meia volta e obter mais informações antes de agir.\n");
+      scanf("%d",&path_choice_escolha);
+            if (path_choice_escolha==1){
+            printf("Confronto eminente, esteja pronto.\n");
+            sleep(2);
+            player.cons = fight(player, inimigo1);
+            printf("Sua vida restante: %d\n\n",player.cons);
+            }
+   }else{
+      printf("Melhor dar meia volta e obter informações de como entrar na caverna de maneira segura.\n");
+      }
+      
+  sleep(3);
+  printf("Depois de um tempo apenas observando a situação é facil de perceber que a uma leve distinção dos mercenários para os cultistas,\n"
+  "os membros do culto usam um manto vermelho com adornos de dragões sobre suas vestes e até foi possível ver um deles entrando a\n"
+  "caverna sem se preocupar com o guarda.\n");
+  sleep(5);
+  printf("Procurando pelo acampamento, algumas tendas são diferentes das outras,  mercenarios e kobolds tem tendas similares, mas a dos\n" 
+  "cultitas assim como suas vestes, são enfeitadas com desenhos de dragões negros, representando sua adoração por essas criaturas.\n"
+  "Você passa então a procurar por um tenda onde tenha a chance de roubar um manto.\n");
+  sleep(2);
+
+  pericia =0;
+   while (pericia < 10){
+    printf("Você procura pela tenda de um cultista para roubar seu manto, mas já nota que o cultista dentro da tenda ainda está acordado e\n" 
+    "em estado de alerta, melhor se retirar.\n");
+    pericia = rand() % 20+1;
+   }
+  printf("Você acha uma tenda, há apenas um cultista e ele está dormindo, sua veste está bem dobrada ao lado de sua cama. Você entra\n"
+  "furtivamente em sua tenda e rouba seu manto.\n");
+  sleep(2);
+  printf("Agora você está pronto para adentrar a caverna novamente.\n");
+  sleep(1);
+
+  printf("Vestindo o manto do culto, você passa pelo guarda que nem sequer olha em seu rosto, apenas observa seu traje e o deixa passar sem\n"
+         "nenhum problema.\n");
+  sleep(1);
+  printf("Você continua adentrando a caverna por alguns minutos, nada em particular chama sua atenção, algumas tochas foram encaixadas entre\n"
+  "frestas da parede rochosa para iluminar o caminho de quem passasse por ali.\n");
+  sleep(2);
+  printf("Seguindo o caminho único dentro da caverna e sem encontrar com ninguém durante o trajeto, você avista uma luz diferente de tochas\n"
+  "a frente.\n");
+  sleep(2);
+  printf("Você encontra uma câmara que foi aumentada e reformulada a partir de sua forma original. O piso e as paredes são lisos, e as estalactites\n"
+        "e estalagmites foram polidas em colunas brilhantes.\n");
+  sleep(2);
+  printf("Cada superficie brilha com umidade, o ar daquela sala, quente e umido. As paredes planas da câmara são decoradas de com rasas esculturas\n"
+       "abstratas de dragões.\n");
+  sleep(2);
+  printf("Caudas de dragões enrolam-se em intricados padrões e nós que fluem através das parades.\n");
+  sleep(1);
+  printf("E no fundo da câmara, uma pilha enorme de tesouros, tantas peças de ouro, tantos baús, que pareciam interminaveis diante de seus olhos.\n");
+  sleep(5);
+  printf("Ora, ora, ora, parece que temos alguém que foi guiado por sua ganancia direto para os braços da morte. - disse um voz monstruosa\n"
+       "de uma criatura que saia das sombras projetada pelos pilares da caverna, um meio-dragão, que não esperou para ouvir suas palavras,\n"
+       "apenas partiu para cima, para o combate.\n");
+  //player.cons = fight_boss(player, boss);   Aqui teremos a função batalha do chefe
+ 
+
+  printf("Vasculhando entre a pilha de tesouro banhada em sangue de meio-dragão, você busca pelos tesouros mais valiosos, pedras preciosas,\n"
+       "poções, até mesmo armas.\n");
+  sleep(3);
+  printf("Em meio a tudo isso, você encontra um pequeno baú, dentro dele, um mapa...\n");
+  printf("Quem sabe, de sua próxima aventura.\n");
+  sleep(5);
+  printf("FIM.");
+
+}
+
+    //printf("Você %s, da classe %s, possui %d força, %d vida, %d armadura\n", player.nome, player.escolha_classe, player.ataque, player.cons, player.CA);
+    //player.cons = fight(player, inimigo1); // chamada para a função de combate.
+    //printf("Sua vida restante: %d\n\n",player.cons);
+
+
+    return 0;
+}
