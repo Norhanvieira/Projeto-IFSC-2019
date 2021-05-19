@@ -1,0 +1,134 @@
+#include <stdlib.h> //  para as funções rand() e srand()
+#include <time.h>// para função time()
+#include <stdio.h>
+
+ CABEÇARIO FUNÇÃO COMBATE
+
+    int iniciativa_player, iniciativa_enemy;               
+    int roll = 0;
+    int aux = 0;
+    int damage = 0;
+    int acao_batalha = 0;
+    
+    srand(time(NULL));
+
+    iniciativa_player = rand() % 20+1;
+    iniciativa_enemy = rand() % 20+1;
+    printf("A sua iniciativa foi de %d e a do inimigo foi de %d. \n", iniciativa_player, iniciativa_enemy);
+    sleep(1);
+    if (iniciativa_player >= iniciativa_enemy) {
+        while (*vida > 0 && inimigo.vida > 0) {
+        printf("Sua iniciativa foi maior, isso quer dizer que você começa jogando.\n");
+        sleep(1);
+        printf("É sua vez, determine qual ação deseja realizar:\n"
+                "1. Ação de ataque (um ataque simples contra o inimigo)\n"
+                "2. Ação de defesa (concentrasse em apenas se defender recebendo bonus de defesa contra ataques deste turno)\n"
+                "3. Ação de cura (utilizar uma poção de seu inventário)\n");
+                scanf("%d",&acao_batalha);
+                sleep(1);
+        if (acao_batalha == 1){        
+            roll = (rand() % 20 + 1) + ataqueP;
+            printf("Sua rolagem de ataque contra o inimigo foi de: %d\n", roll);
+            sleep(1);
+            if (roll >= inimigo.CA) {
+                printf("Você acertou o seu inimigo com precisão\n");
+                sleep(1);
+                aux = (rand() % 4 + 1) + player.ataque;
+                printf("Desferindo %d de dano à ele\n", aux);
+                sleep(1);
+                inimigo.vida = inimigo.vida - aux;
+                sleep(1);
+                if (inimigo.vida < 0) {
+                    printf("Você se saiu bem sucedido em seu combate, vamos continuar nossa aventura.\n");
+                    break;
+                }
+            } else if (acao_batalha == 2){
+                player.CA = player.CA + 3;
+                printf("Você está observando os movimentos de seu inimigo, sua defesa com bonus é de: %d\n", player.CA);
+                sleep(1);
+            } else {
+                printf("Você pega um frasco de sua mochila e bebe a poção mágica, recebendo 6 de cura\n");
+                *vida = *vida +6;
+                player.potion = player.potion - 1;
+                sleep(1);
+                printf("Sua vida atual é de: %d\n", *vida);  
+             }
+             sleep(2);
+            printf("Agora é a vez de seu adversário, vamos ver como ele se sai\n");     
+             
+            roll = (rand() % 20 + 1) + inimigo.ataque;
+            printf("O inimigo rolou %d para te acertar.\n", roll);
+            if (roll >= player.CA) {
+                printf("Parece que ele conseguiu passar por suas defesas.\n");
+                sleep(1);
+                aux = (rand() % 4+1) + inimigo.ataque;
+                printf("O dano que o inimigo desferiu em você foi:%d\n",aux);
+                *vida = *vida - aux;
+                printf("Sua vida atual é de:%d\n",vidaP);
+                if (vidaP < 0){
+                    ("Não se deixe abalar, vamos continuar nossa aventura mesmo com a derrota.\n");
+                    break;
+                }
+            }
+
+        }
+    } 
+        
+        else {
+        while (*vida > 0 && inimigo.vida > 0) {
+        printf("Sua iniciativa foi menor, isso quer dizer que o inimigo começa jogando.\n");
+            roll = (rand() % 20 + 1) + inimigo.ataque;
+            printf("O inimigo rolou %d para te acertar.\n", roll);
+            if (roll >= player.CA) {
+                printf("Parece que ele conseguiu passar por suas defesas.\n");
+                sleep(1);
+                aux = (rand() % 4+1) + inimigo.ataque;
+                printf("O dano que o inimigo desferiu em você foi:%d\n",aux);
+                *vida = *vida - aux;
+                printf("Sua vida atual é de:%d\n",vidaP);
+                if (vidaP < 0){
+                    ("Não se deixe abalar, vamos continuar nossa aventura mesmo com a derrota.\n");
+                    break;
+             }
+
+            }
+            printf("É sua vez, determine qual ação deseja realizar:\n"
+                "1. Ação de ataque (um ataque simples contra o inimigo)\n"
+                "2. Ação de defesa (concentrasse em apenas se defender recebendo bonus de defesa contra ataques deste turno)\n"
+                "3. Ação de cura (utilizar uma poção de seu inventário)\n");
+                scanf("%d",&acao_batalha);
+                sleep(1);
+        if (acao_batalha == 1){        
+            roll = (rand() % 20 + 1) + ataqueP;
+            printf("Sua rolagem de ataque contra o inimigo foi de: %d\n", roll);
+            sleep(1);
+            if (roll >= inimigo.CA) {
+                printf("Você acertou o seu inimigo com precisão\n");
+                sleep(1);
+                aux = (rand() % 4 + 1) + player.ataque;
+                printf("Desferindo %d de dano à ele\n", aux);
+                sleep(1);
+                inimigo.vida = inimigo.vida - aux;
+                sleep(1);
+                if (inimigo.vida < 0) {
+                    printf("Você se saiu bem sucedido em seu combate, vamos continuar nossa aventura.\n");
+                    break;
+                }
+            } else if (acao_batalha == 2){
+                player.CA = player.CA + 3;
+                printf("Você está observando os movimentos de seu inimigo, sua defesa com bonus é de: %d\n", player.CA);
+                sleep(1);
+            } else {
+                printf("Você pega um frasco de sua mochila e bebe a poção mágica, recebendo 6 de cura\n");
+                *vida = *vida +6;
+                player.potion = player.potion - 1;
+                sleep(1);
+                printf("Sua vida atual é de: %d\n", *vida);  
+             }
+            sleep(2);
+            printf("Agora é a vez de seu adversário, vamos ver como ele se sai\n");
+        }
+  }
+  
+ return player.cons;
+}
